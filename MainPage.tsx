@@ -12,9 +12,14 @@ const MainPage = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       {overview.isSuccess == true && (
-        <View>
-          <FixturesView overview={overview.data} />
-        </View>
+        <>
+          <View>
+            <FixturesView overview={overview.data} />
+          </View>
+          <View style={styles.playerSearchView}>
+            <PlayerSearch />
+          </View>
+        </>
       )}
     </SafeAreaView>
   );
