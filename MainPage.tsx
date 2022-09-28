@@ -19,6 +19,9 @@ const MainPage = () => {
           <View style={styles.playerSearchView}>
             <PlayerSearch />
           </View>
+          <View style={styles.lineupView}>
+            <LineupContainer />
+          </View>
         </>
       )}
     </SafeAreaView>
