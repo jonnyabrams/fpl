@@ -12,7 +12,7 @@ const TeamEmblem = () => {
       <Text
         style={{ fontSize: 0.025 * GlobalConstants.width, alignSelf: "center" }}
       >
-        MUN
+        EVE
       </Text>
     </View>
   );

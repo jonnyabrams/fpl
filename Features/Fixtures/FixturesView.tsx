@@ -2,7 +2,8 @@ import { useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 
-import { useGetFixturesQuery, useGetOverviewQuery, } from '../../redux/fplSlice'
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useGetFixturesQuery, useGetOverviewQuery } from "../../redux/fplSlice";
 import { FplOverview } from "../../models/FplOverview";
 import * as GlobalConstants from "../../globals/constants";
 import FixtureCard from "./FixtureCard";
@@ -29,15 +30,17 @@ const FixturesView = (prop: FixturesViewProp) => {
           })}
         />
       </View>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.fixturesView}
-      >
-        {fixtures.data !== undefined && (
-          <FixtureCard overview={prop.overview} fixture={fixtures.data[30]} />
-        )}
-      </ScrollView>
+      {fixtures.isSuccess == true && (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.fixturesView}
+        >
+          {fixtures.data !== undefined && (
+            <FixtureCard overview={prop.overview} fixture={fixtures.data[30]} />
+          )}
+        </ScrollView>
+      )}
     </View>
   );
 };

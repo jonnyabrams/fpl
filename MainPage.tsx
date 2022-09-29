@@ -1,10 +1,11 @@
 import { SafeAreaView, StyleSheet, View, Text } from "react-native";
 
-import FixturesView from "./features/fixtures/FixturesView";
-import PlayerSearch from "./features/playerStats/PlayerSearch";
-import LineupContainer from "./features/gameStats/LineupContainer";
+
 import { useGetOverviewQuery } from "./redux/fplSlice";
 import * as GlobalConstants from "./globals/constants";
+import FixturesView from "./features/Fixtures/FixturesView";
+import PlayerSearch from "./features/PlayerStats/PlayerSearch";
+import LineupContainer from "./features/GameStats/LineupContainer";
 
 const MainPage = () => {
   const overview = useGetOverviewQuery();

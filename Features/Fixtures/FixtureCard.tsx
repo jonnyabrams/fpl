@@ -21,9 +21,9 @@ const FixtureCard = (prop: FixtureCardProp) => {
             <Text style={styles.datetext}>{ moment(prop.fixture.kickoff_time).tz(Localization.timezone).format('MMM d, h:mm z') }</Text>
           </View>
           <View style={styles.scoreview}>
-            <TeamEmblem />
+            <TeamEmblem team={prop.overview.teams[0]} />
             <Text style={styles.scoretext}>vs</Text>
-            <TeamEmblem />
+            <TeamEmblem team={prop.overview.teams[1]} />
           </View>
         </View>
       )}
