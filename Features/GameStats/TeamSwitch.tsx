@@ -12,6 +12,7 @@ import {
 } from "react-native";
 
 import { useGetFixturesQuery, useGetOverviewQuery } from "../../redux/fplSlice";
+import { FixtureInfo, toggleTeamShown } from "../../redux/fixtureSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import * as GlobalConstants from "../../globals/constants";
 import { GetTeamDataFromOverviewWithFixtureTeamID } from "../../helpers/fplApiHelpers";
@@ -24,26 +25,26 @@ const getViewWidth = (event: LayoutChangeEvent) => {
 };
 
 const TeamSwitch = () => {
-  const currentFixture: FplFixture | null = useAppSelector(
+  const fixtureInfo: FixtureInfo | null = useAppSelector(
     (state) => state.fixture
   );
   const overview = useGetOverviewQuery();
+  const dispatch = useAppDispatch();
   const translateAnim = useRef(new Animated.Value(0)).current;
-  var isHome = true;
 
   const switchTeam = () => {
     Animated.spring(translateAnim, {
-      toValue: isHome ? viewWidth / 2 + 1 : 0,
+      toValue: fixtureInfo.isHome ? viewWidth / 2 + 1 : 0,
       friction: 10,
       useNativeDriver: true,
     }).start();
 
-    isHome = !isHome;
+    dispatch(toggleTeamShown());
   };
 
   return (
     <View style={styles.container} onLayout={(event) => getViewWidth(event)}>
-      {currentFixture !== null && overview.data !== undefined && (
+      {fixtureInfo.fixture !== null && overview.data !== undefined && (
         <>
           <Animated.View
             style={[
@@ -58,8 +59,22 @@ const TeamSwitch = () => {
           />
           <TouchableWithoutFeedback style={styles.button} onPress={switchTeam}>
             <View style={styles.buttonContainer}>
-              <Text style={styles.text}>{ GetTeamDataFromOverviewWithFixtureTeamID(currentFixture.team_h, overview.data) }</Text>
-              <Text style={styles.text}>{ GetTeamDataFromOverviewWithFixtureTeamID(currentFixture.team_a, overview.data) }</Text>
+              <Text style={styles.text}>
+                {
+                  GetTeamDataFromOverviewWithFixtureTeamID(
+                    fixtureInfo.fixture.team_h,
+                    overview.data
+                  ).short_name
+                }
+              </Text>
+              <Text style={styles.text}>
+                {
+                  GetTeamDataFromOverviewWithFixtureTeamID(
+                    fixtureInfo.fixture.team_a,
+                    overview.data
+                  ).short_name
+                }
+              </Text>
             </View>
           </TouchableWithoutFeedback>
         </>
