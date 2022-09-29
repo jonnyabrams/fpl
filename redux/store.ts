@@ -1,12 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { fplSlice } from './fplSlice'
+import { configureStore } from "@reduxjs/toolkit";
+
+import { fplSlice } from "./fplSlice";
+import fixtureReducer from "./fixtureSlice";
 
 export const store = configureStore({
   reducer: {
-    [fplSlice.reducerPath]: fplSlice.reducer
+    fixture: fixtureReducer,
+    [fplSlice.reducerPath]: fplSlice.reducer,
   },
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(fplSlice.middleware)
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(fplSlice.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;
