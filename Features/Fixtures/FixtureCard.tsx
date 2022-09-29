@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import moment from "moment-timezone";
 import * as Localization from "expo-localization";
 
@@ -6,58 +13,83 @@ import { FplFixture } from "../../models/FplFixtures";
 import { FplOverview } from "../../models/FplOverview";
 import * as GlobalConstants from "../../globals/constants";
 import TeamEmblem from "./TeamEmblem";
+import { useGetOverviewQuery } from "../../redux/fplSlice";
+import { useAppDispatch } from "../../redux/hooks";
+import { fixtureChanged } from "../../redux/fixtureSlice";
+import { GetTeamDataFromOverviewWithFixtureTeamID } from "../../helpers/fplApiHelpers";
 
 interface FixtureCardProp {
   fixture: FplFixture | undefined;
-  overview: FplOverview | undefined;
 }
 
+const setScoreAndTime = (fixture: FplFixture) => {
+  if (fixture !== undefined) {
+    if (fixture.finished == true) {
+      return (
+        <>
+          <Text style={styles.scoreText}>
+            {fixture.team_h_score} - {fixture.team_a_score}
+          </Text>
+          <Text style={styles.timeText}>FT</Text>
+        </>
+      );
+    } else if (fixture.started == true) {
+      return (
+        <Text style={styles.scoreText}>
+          {fixture.team_h_score} - {fixture.team_a_score}
+        </Text>
+      );
+    } else {
+      return <Text style={styles.scoreText}>vs</Text>;
+    }
+  }
+};
+
 const FixtureCard = (prop: FixtureCardProp) => {
-  const getTeam = (teamNumber: number) => {
-    return prop.overview!.teams.filter((team) => team.id == teamNumber);
+  const dispatch = useAppDispatch();
+
+  const onPress = () => {
+    dispatch(fixtureChanged(prop.fixture!));
   };
 
-  const setScoreAndTime = () => {
-    if (prop.fixture !== undefined) {
-      if (prop.fixture.finished == true) {
-        return (
-          <>
-            <Text style={styles.scoreText}>
-              {prop.fixture.team_h_score} - {prop.fixture.team_a_score}
-            </Text>
-            <Text style={styles.timeText}>FT</Text>
-          </>
-        );
-      } else if (prop.fixture.started == true) {
-        return (
-          <Text style={styles.scoreText}>
-            {prop.fixture.team_h_score} - {prop.fixture.team_a_score}
-          </Text>
-        );
-      } else {
-        return <Text style={styles.scoreText}>vs</Text>;
-      }
-    }
-  };
+  const overview = useGetOverviewQuery();
 
   return (
     <View style={styles.container}>
-      {prop.fixture !== undefined && prop.overview !== undefined && (
-        <View style={styles.card}>
-          <View style={styles.topbar}>
-            <Text style={styles.datetext}>
-              {moment(prop.fixture.kickoff_time)
-                .tz(Localization.timezone)
-                .format("MMM D, h:mm z")}
-            </Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={onPress}
+        disabled={!prop.fixture?.started}
+      >
+        {prop.fixture !== undefined && overview.data !== undefined && (
+          <View style={styles.card}>
+            <View style={styles.topbar}>
+              <Text style={styles.datetext}>
+                {moment(prop.fixture.kickoff_time)
+                  .tz(Localization.timezone)
+                  .format("MMM D, h:mm z")}
+              </Text>
+            </View>
+            <View style={styles.scoreView}>
+              <TeamEmblem
+                team={GetTeamDataFromOverviewWithFixtureTeamID(
+                  prop.fixture.team_h,
+                  overview.data
+                )}
+              />
+              <View style={styles.scoreAndTimeView}>
+                {setScoreAndTime(prop.fixture)}
+              </View>
+              <TeamEmblem
+                team={GetTeamDataFromOverviewWithFixtureTeamID(
+                  prop.fixture.team_a,
+                  overview.data
+                )}
+              />
+            </View>
           </View>
-          <View style={styles.scoreView}>
-            <TeamEmblem team={getTeam(prop.fixture.team_h)} />
-            <Text style={styles.scoreAndTimeView}>{ setScoreAndTime() }</Text>
-            <TeamEmblem team={getTeam(prop.fixture.team_a)} />
-          </View>
-        </View>
-      )}
+        )}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -68,6 +100,10 @@ const styles = StyleSheet.create({
     height: "100%",
     width: GlobalConstants.width * 0.33,
     paddingLeft: 5,
+  },
+
+  button: {
+    flex: 1,
   },
 
   card: {
