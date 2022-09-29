@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-import { FplFixtures } from "../models/FplFixtures"
+import { FplFixture } from "../models/FplFixtures"
 import { FplGameweek } from '../models/FplGameweek'
 import { FplOverview } from '../models/FplOverview'
 
@@ -15,7 +15,7 @@ export const fplSlice = createApi({
       query: () => '/bootstrap-static/'
     }),
 
-    getFixtures: builder.query<FplFixtures[], void>({
+    getFixtures: builder.query<FplFixture[], void>({
       query: () => '/fixtures'
     }),
 

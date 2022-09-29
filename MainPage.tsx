@@ -1,6 +1,5 @@
 import { SafeAreaView, StyleSheet, View, Text } from "react-native";
 
-
 import { useGetOverviewQuery } from "./redux/fplSlice";
 import * as GlobalConstants from "./globals/constants";
 import FixturesView from "./features/Fixtures/FixturesView";

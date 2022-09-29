@@ -2,7 +2,6 @@ import { View, Image, Text, StyleSheet } from "react-native";
 
 import * as GlobalConstants from "../../globals/constants";
 import { emblems } from "../../globals/images";
-import { FplFixtures } from "../../Models/FplFixtures";
 import { Team } from "../../Models/FplOverview";
 
 interface TeamEmblemProp {
