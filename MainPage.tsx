@@ -13,14 +13,8 @@ const MainPage = () => {
     <SafeAreaView style={styles.safeArea}>
       {overview.isSuccess == true && (
         <>
-          <View>
+          <View style={styles.fixturesView}>
             <FixturesView overview={overview.data} />
-          </View>
-          <View style={styles.playerSearchView}>
-            <PlayerSearch />
-          </View>
-          <View style={styles.lineupView}>
-            <LineupContainer />
           </View>
         </>
       )}
@@ -39,16 +33,8 @@ const styles = StyleSheet.create({
     marginTop: "0%",
   },
 
-  playerSearchView: {
-    flex: 1,
-  },
-
   fixturesView: {
     flex: 2,
-  },
-
-  lineupView: {
-    flex: 10,
   },
 });
 

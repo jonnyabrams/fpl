@@ -10,16 +10,26 @@ import {
   LayoutChangeEvent,
   TouchableWithoutFeedback,
 } from "react-native";
+
+import { useGetFixturesQuery, useGetOverviewQuery } from "../../redux/fplSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import * as GlobalConstants from "../../globals/constants";
+import { GetTeamDataFromOverviewWithFixtureTeamID } from "../../helpers/fplApiHelpers";
+import { FplFixture } from "../../models/FplFixtures";
+
+var viewWidth: number;
+
+const getViewWidth = (event: LayoutChangeEvent) => {
+  viewWidth = event.nativeEvent.layout.width;
+};
 
 const TeamSwitch = () => {
+  const currentFixture: FplFixture | null = useAppSelector(
+    (state) => state.fixture
+  );
+  const overview = useGetOverviewQuery();
   const translateAnim = useRef(new Animated.Value(0)).current;
   var isHome = true;
-  var viewWidth: number;
-
-  const getViewWidth = (event: LayoutChangeEvent) => {
-    viewWidth = event.nativeEvent.layout.width;
-  };
 
   const switchTeam = () => {
     Animated.spring(translateAnim, {
@@ -33,18 +43,27 @@ const TeamSwitch = () => {
 
   return (
     <View style={styles.container} onLayout={(event) => getViewWidth(event)}>
-      <Animated.View
-        style={[
-          styles.highlight,
-          { transform: [{ translateX: translateAnim }, { perspective: 100 }] },
-        ]}
-      />
-      <TouchableWithoutFeedback style={styles.button} onPress={switchTeam}>
-        <View style={styles.buttonContainer}>
-          <Text style={styles.text}>MUN</Text>
-          <Text style={styles.text}>CHE</Text>
-        </View>
-      </TouchableWithoutFeedback>
+      {currentFixture !== null && overview.data !== undefined && (
+        <>
+          <Animated.View
+            style={[
+              styles.highlight,
+              {
+                transform: [
+                  { translateX: translateAnim },
+                  { perspective: 100 },
+                ],
+              },
+            ]}
+          />
+          <TouchableWithoutFeedback style={styles.button} onPress={switchTeam}>
+            <View style={styles.buttonContainer}>
+              <Text style={styles.text}>{ GetTeamDataFromOverviewWithFixtureTeamID(currentFixture.team_h, overview.data) }</Text>
+              <Text style={styles.text}>{ GetTeamDataFromOverviewWithFixtureTeamID(currentFixture.team_a, overview.data) }</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        </>
+      )}
     </View>
   );
 };
