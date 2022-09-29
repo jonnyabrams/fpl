@@ -86,7 +86,7 @@ const FixturesView = (prop: FixturesViewProp) => {
   );
 
   return (
-    <View style={styles.fixturesView}>
+    <View style={styles.container}>
       <View style={styles.gameweekView}>
         <RNPickerSelect
           value={gameweekNumber}
@@ -97,6 +97,7 @@ const FixturesView = (prop: FixturesViewProp) => {
           })}
         />
       </View>
+
       {fixtures.isSuccess == true && (
         <ScrollView
           horizontal
@@ -114,12 +115,6 @@ const FixturesView = (prop: FixturesViewProp) => {
               })}
         </ScrollView>
       )}
-      <View style={styles.playerSearchView}>
-        <PlayerSearch />
-      </View>
-      <View style={styles.lineupView}>
-        <LineupContainer />
-      </View>
     </View>
   );
 };
@@ -141,14 +136,6 @@ const styles = StyleSheet.create({
 
   fixturesView: {
     flex: 2,
-  },
-
-  playerSearchView: {
-    flex: 1,
-  },
-
-  lineupView: {
-    flex: 10,
   },
 });
 

@@ -1,35 +1,47 @@
 import { Image, StyleSheet, View } from "react-native";
 
+import { useGetGameweekDataQuery } from "../../redux/fplSlice";
+import { useAppSelector } from "../../redux/hooks";
+import { FplGameweek, Player } from "../../models/FplGameweek";
 import PlayerGamePointsImage from "./PlayerGamePointsImage";
 
 const Lineup = () => {
+  const fixtureInfo = useAppSelector((state) => state.fixture);
+  var gameweekData;
+
+  if (fixtureInfo.fixture !== null && fixtureInfo.fixture.event !== null) {
+    gameweekData = useGetGameweekDataQuery(fixtureInfo.fixture.event);
+  }
+
   return (
     <View style={styles.container}>
       <Image
         style={styles.field}
         source={require("../../assets/threequartersfield.jpeg")}
       />
-      <View style={styles.playerContainer}>
-        <View style={styles.playerRowContainer}>
-          <PlayerGamePointsImage />
+      {fixtureInfo.fixture !== null && (
+        <View style={styles.playerContainer}>
+          <View style={styles.playerRowContainer}>
+            <PlayerGamePointsImage />
+          </View>
+          <View style={styles.playerRowContainer}>
+            <PlayerGamePointsImage />
+            <PlayerGamePointsImage />
+            <PlayerGamePointsImage />
+            <PlayerGamePointsImage />
+            <PlayerGamePointsImage />
+          </View>
+          <View style={styles.playerRowContainer}>
+            <PlayerGamePointsImage />
+            <PlayerGamePointsImage />
+            <PlayerGamePointsImage />
+          </View>
+          <View style={styles.playerRowContainer}>
+            <PlayerGamePointsImage />
+            <PlayerGamePointsImage />
+          </View>
         </View>
-        <View style={styles.playerRowContainer}>
-          <PlayerGamePointsImage />
-          <PlayerGamePointsImage />
-          <PlayerGamePointsImage />
-          <PlayerGamePointsImage />
-          <PlayerGamePointsImage />
-        </View>
-        <View style={styles.playerRowContainer}>
-          <PlayerGamePointsImage />
-          <PlayerGamePointsImage />
-          <PlayerGamePointsImage />
-        </View>
-        <View style={styles.playerRowContainer}>
-          <PlayerGamePointsImage />
-          <PlayerGamePointsImage />
-        </View>
-      </View>
+      )}
     </View>
   );
 };

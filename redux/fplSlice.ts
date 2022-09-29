@@ -19,10 +19,10 @@ export const fplSlice = createApi({
       query: () => '/fixtures'
     }),
 
-    getGameekData: builder.query<FplGameweek, number|void >({
+    getGameweekData: builder.query<FplGameweek, number>({
       query: (gameweek: number) => '/event/${gameweek}/live'
     })
   })
 })
 
-export const { useGetOverviewQuery, useGetFixturesQuery, useGetGameekDataQuery } = fplSlice
+export const { useGetOverviewQuery, useGetFixturesQuery, useGetGameweekDataQuery } = fplSlice
